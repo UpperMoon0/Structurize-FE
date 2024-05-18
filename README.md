@@ -1,8 +1,13 @@
-# React + Vite
+# Vite + React-Bootstrap Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This application is a social media platform where users can create and view posts.
 
-Currently, two official plugins are available:
+## Main Technologies
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Vite**: A build tool that provides a faster and leaner development experience for modern web projects. It also allows us to use JavaScript and other modern language features.
+
+- **React-Bootstrap**: A front-end framework rebuilt for React. It allows us to use Bootstrap components within our React application.
+
+## Getting Started
+
+To get started with this application, clone the repository and install the dependencies using npm. Then, you can start the development server using the `npm run dev` command.
