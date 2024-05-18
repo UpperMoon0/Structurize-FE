@@ -6,10 +6,12 @@ class Posts extends React.Component {
   static propTypes = {
     posts: PropTypes.arrayOf(
       PropTypes.shape({
-        author: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        userName: PropTypes.string.isRequired,
         content: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
+        createdAt: PropTypes.string.isRequired,
+        totalFavourites: PropTypes.number.isRequired,
+        totalComments: PropTypes.number.isRequired,
+        imageUrl: PropTypes.string,
       })
     ).isRequired,
   };
@@ -20,10 +22,12 @@ class Posts extends React.Component {
         {this.props.posts.map((post, index) => (
           <Post
             key={index}
-            author={post.author}
-            title={post.title}
+            userName={post.userName}
             content={post.content}
-            date={post.date}
+            createdAt={post.createdAt}
+            totalFavourites={post.totalFavourites}
+            totalComments={post.totalComments}
+            imageUrl={post.imageUrl}
           />
         ))}
       </div>

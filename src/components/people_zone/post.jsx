@@ -4,22 +4,28 @@ import { Card } from 'react-bootstrap';
 
 class Post extends React.Component {
   static propTypes = {
-    author: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    userName: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    totalFavourites: PropTypes.number.isRequired,
+    totalComments: PropTypes.number.isRequired,
+    imageUrl: PropTypes.string,
   };
 
   render() {
     return (
       <Card>
-        <Card.Header>{this.props.author}</Card.Header>
+        <Card.Header>{this.props.userName}</Card.Header>
         <Card.Body>
-          <Card.Title>{this.props.title}</Card.Title>
-          <Card.Text>{this.props.content}</Card.Text>
+          <Card.Title>{this.props.content}</Card.Title>
+          <Card.Text>
+            Favourites: {this.props.totalFavourites} |
+            Comments: {this.props.totalComments}
+          </Card.Text>
+          <Card.Img variant="bottom" src={this.props.imageUrl} />
         </Card.Body>
         <Card.Footer>
-          <small className="text-muted">Posted on {this.props.date}</small>
+          <small className="text-muted">Posted on {this.props.createdAt}</small>
         </Card.Footer>
       </Card>
     );
