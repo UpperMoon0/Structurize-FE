@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../header';
 import SearchBar from './search_bar';
 import CreatePost from './create_post';
@@ -7,12 +7,14 @@ import Posts from './posts';
 import './css/people-zone.css'
 
 function PeopleZone() {
-  // You would typically fetch this data from an API
-  const posts = [
-    { author: 'Author1', title: 'Title1', content: 'Content1', date: 'Date1' },
-    { author: 'Author2', title: 'Title2', content: 'Content2', date: 'Date2' },
-    // More posts...
-  ];
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8081/posts/all')
+      .then(response => response.json())
+      .then(data => setPosts(data))
+      .catch(error => console.error('Error:', error));
+  }, []);
 
   return (
     <>
