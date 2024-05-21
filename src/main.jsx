@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import PeopleZone from './components/people_zone/people_zone.jsx'
 import Favourite from './components/favourite/favourite.jsx'
+import Login from "./components/login/login.jsx";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/people_zone",
     element: <PeopleZone />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
   {
     path: "/favourite",
