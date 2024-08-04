@@ -1,10 +1,10 @@
-import InputComponent from './components/InputComponent';
+import StructureDetailsComponent from './components/StructureDetailsComponent.jsx';
 import './App.css';
 
 function App() {
     return (
         <div>
-            <InputComponent />
+            <StructureDetailsComponent />
         </div>
     );
 }
