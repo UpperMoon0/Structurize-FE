@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
-function StructureRendererComponent({ structure }) {
+function StructureRendererComponent({ structure, blocks }) {
     const mountRef = useRef(null);
 
     useEffect(() => {
@@ -33,19 +33,41 @@ function StructureRendererComponent({ structure }) {
             layer.forEach((row, x) => {
                 row.forEach((cube, z) => {
                     if (cube !== 'minecraft:air') {
-                        const cubeGeometry = geometry.clone();
-                        cubeGeometry.translate(x, -y, z);
-                        geometries.push(cubeGeometry);
+                        const block = blocks.find(b => b.id === cube);
+                        if (block) {
+                            const cubeGeometry = geometry.clone();
+                            cubeGeometry.translate(x, -y, z);
+                            geometries.push(cubeGeometry);
+
+                            // Apply texture to the material
+                            const textureBase64 = block.textures.all;
+                            const textureLoader = new THREE.TextureLoader();
+                            const texture = textureLoader.load(
+                                'data:image/png;base64,' + textureBase64,
+                                () => {
+                                    texture.needsUpdate = true; // Ensure texture is updated
+                                    const material = new THREE.MeshBasicMaterial({ map: texture });
+                                    const mesh = new THREE.Mesh(cubeGeometry, material);
+                                    scene.add(mesh);
+                                },
+                                undefined,
+                                (err) => {
+                                    console.error('Failed to load texture', err);
+                                }
+                            );
+                        }
                     }
                 });
             });
         });
 
-        // Merge geometries
-        const mergedGeometry = mergeGeometries(geometries);
-        const mergedMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const mergedMesh = new THREE.Mesh(mergedGeometry, mergedMaterial);
-        scene.add(mergedMesh);
+        // Merge geometries if there are any
+        if (geometries.length > 0) {
+            const mergedGeometry = mergeGeometries(geometries);
+            const mergedMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const mergedMesh = new THREE.Mesh(mergedGeometry, mergedMaterial);
+            scene.add(mergedMesh);
+        }
 
         // Controls
         const controls = new OrbitControls(camera, renderer.domElement);
@@ -67,7 +89,7 @@ function StructureRendererComponent({ structure }) {
         return () => {
             mount.removeChild(renderer.domElement);
         };
-    }, [structure]);
+    }, [structure, blocks]);
 
     return <div ref={mountRef} style={{ width: '100%', height: '100vh' }} />;
 }
@@ -80,15 +102,12 @@ StructureRendererComponent.propTypes = {
             )
         )
     ).isRequired,
-};
-
-StructureRendererComponent.propTypes = {
-    structure: PropTypes.arrayOf(
-        PropTypes.arrayOf(
-            PropTypes.arrayOf(
-                PropTypes.string
-            )
-        )
+    blocks: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            textures: PropTypes.object.isRequired
+        })
     ).isRequired,
 };
 

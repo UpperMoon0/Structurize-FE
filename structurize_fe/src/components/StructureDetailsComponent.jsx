@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StructureService from '../api/StructureService';
+import BlockService from '../api/BlockService';
 import StructureRendererComponent from "./StructureRendererComponent.jsx";
 
 function StructureDetailsComponent() {
@@ -9,7 +10,22 @@ function StructureDetailsComponent() {
         description: "Unloaded",
         blockIds: [[["minecraft:dirt"]]]
     });
+    const [blocks, setBlocks] = useState([]);
     const structureService = new StructureService();
+    const blockService = new BlockService();
+
+    useEffect(() => {
+        const fetchBlocks = async () => {
+            try {
+                const fetchedBlocks = await blockService.getBlocks();
+                setBlocks(fetchedBlocks);
+            } catch (error) {
+                console.error('Error fetching blocks:', error);
+            }
+        };
+
+        fetchBlocks().then(() => console.log('Blocks fetched'));
+    }, []);
 
     const handleButtonClick = async () => {
         try {
@@ -36,7 +52,7 @@ function StructureDetailsComponent() {
                 </div>
             )}
             <div className="structure-renderer-container">
-                <StructureRendererComponent structure={structure.blockIds} />
+                <StructureRendererComponent structure={structure.blockIds} blocks={ blocks } />
             </div>
         </div>
     );
