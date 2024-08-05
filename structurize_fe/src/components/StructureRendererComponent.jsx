@@ -46,7 +46,11 @@ function StructureRendererComponent({ structure, blocks }) {
                                 'data:image/png;base64,' + textureBase64,
                                 () => {
                                     texture.needsUpdate = true; // Ensure texture is updated
-                                    const material = new THREE.MeshBasicMaterial({ map: texture });
+                                    texture.minFilter = THREE.NearestFilter;
+                                    texture.magFilter = THREE.NearestFilter;
+                                    texture.generateMipmaps = false;
+
+                                    const material = new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff }); // Set color to white
                                     const mesh = new THREE.Mesh(cubeGeometry, material);
                                     scene.add(mesh);
                                 },
