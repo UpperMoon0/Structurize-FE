@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
+// This code is a mess, needs cleanup
 function StructureRendererComponent({ structure, blocks }) {
     const mountRef = useRef(null);
 
@@ -19,8 +20,6 @@ function StructureRendererComponent({ structure, blocks }) {
 
         // Renderer
         const renderer= new THREE.WebGLRenderer();
-        renderer.sortObjects = true;
-        renderer.physicallyCorrectLights = true;
         renderer.outputEncoding = 3001;
         renderer.setSize(mount.clientWidth, mount.clientHeight);
         mount.appendChild(renderer.domElement);
