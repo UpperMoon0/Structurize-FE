@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import StructureService from '../api/StructureService';
+import StructureService from '../../api/StructureService.js';
 
 function UploadStructureComponent() {
     const [name, setName] = useState('');

@@ -35,6 +35,16 @@ class StructureService {
       throw error;
     }
   }
+
+  async getAllStructures() {
+    try {
+      const response = await this.api.get('/structure/get-all-structures');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  }
 }
 
 export default StructureService;

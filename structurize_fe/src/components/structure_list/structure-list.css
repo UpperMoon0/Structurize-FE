@@ -1,0 +1,14 @@
+.container {
+    margin: 100px auto;
+}
+
+.list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.card-wrapper {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+}
