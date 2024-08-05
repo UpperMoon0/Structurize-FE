@@ -18,7 +18,10 @@ function StructureRendererComponent({ structure, blocks }) {
         camera.position.z = 5;
 
         // Renderer
-        const renderer = new THREE.WebGLRenderer();
+        const renderer= new THREE.WebGLRenderer();
+        renderer.sortObjects = true;
+        renderer.physicallyCorrectLights = true;
+        renderer.outputEncoding = 3001;
         renderer.setSize(mount.clientWidth, mount.clientHeight);
         mount.appendChild(renderer.domElement);
 
@@ -49,8 +52,9 @@ function StructureRendererComponent({ structure, blocks }) {
                                     texture.minFilter = THREE.NearestFilter;
                                     texture.magFilter = THREE.NearestFilter;
                                     texture.generateMipmaps = false;
+                                    texture.colorSpace = THREE.SRGBColorSpace;
 
-                                    const material = new THREE.MeshBasicMaterial({ map: texture, color: 0xffffff }); // Set color to white
+                                    const material = new THREE.MeshBasicMaterial({ map: texture });
                                     const mesh = new THREE.Mesh(cubeGeometry, material);
                                     scene.add(mesh);
                                 },
