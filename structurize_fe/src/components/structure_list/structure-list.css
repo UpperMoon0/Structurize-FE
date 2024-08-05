@@ -1,14 +1,25 @@
 .container {
     margin: 100px auto;
+    padding: 80px;
 }
 
 .list {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
 }
 
 .card-wrapper {
     border: 1px solid #e0e0e0;
     padding: 10px;
+    background-color: transparent;
+    color: inherit;
+    text-decoration: none;
+    width: 200px;
+    height: 300px;
+}
+
+.card-wrapper:hover, .card-wrapper:focus {
+    background-color: transparent;
+    color: inherit;
+    text-decoration: none;
 }

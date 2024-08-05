@@ -25,7 +25,7 @@ function StructureDetailsComponent() {
             }
         };
 
-        fetchBlocks().then(() => console.log('Blocks fetched'));
+        fetchBlocks().then();
     }, []);
 
     useEffect(() => {
@@ -39,7 +39,7 @@ function StructureDetailsComponent() {
             }
         };
 
-        fetchStructure().then(() => console.log('Structure fetched'));
+        fetchStructure().then();
     }, [id]);
 
     return (

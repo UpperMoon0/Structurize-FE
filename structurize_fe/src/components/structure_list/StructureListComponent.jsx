@@ -17,7 +17,7 @@ function StructureListComponent() {
             }
         };
 
-        fetchStructures().then(() => console.log('Structures fetched'));
+        fetchStructures().then();
     }, []);
 
     return (
