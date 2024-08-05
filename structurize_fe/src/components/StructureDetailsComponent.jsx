@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import StructureService from '../api/StructureService';
 import BlockService from '../api/BlockService';
 import StructureRendererComponent from "./StructureRendererComponent.jsx";
+import UploadStructureComponent from "./UploadStructureComponent.jsx";
 
 function StructureDetailsComponent() {
     const [inputValue, setInputValue] = useState('');
@@ -51,6 +52,9 @@ function StructureDetailsComponent() {
                     <p>{structure.description}</p>
                 </div>
             )}
+            <div>
+                <UploadStructureComponent />
+            </div>
             <div className="structure-renderer-container">
                 <StructureRendererComponent structure={structure.blockIds} blocks={ blocks } />
             </div>
