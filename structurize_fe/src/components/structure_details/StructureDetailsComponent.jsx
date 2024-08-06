@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import StructureService from '../../api/StructureService.js';
 import BlockService from '../../api/BlockService.js';
 import StructureRendererComponent from "./StructureRendererComponent.jsx";
-import UploadStructureComponent from "./UploadStructureComponent.jsx";
+import './StructureDetails.css';
 
 function StructureDetailsComponent() {
     const { id } = useParams();
@@ -43,16 +43,13 @@ function StructureDetailsComponent() {
     }, [id]);
 
     return (
-        <div>
+        <div className="structure-details-container">
             {structure && (
                 <div>
                     <h1>{structure.name}</h1>
                     <p>{structure.description}</p>
                 </div>
             )}
-            <div>
-                <UploadStructureComponent />
-            </div>
             <div className="structure-renderer-container">
                 <StructureRendererComponent structure={structure.blockIds} blocks={blocks} />
             </div>

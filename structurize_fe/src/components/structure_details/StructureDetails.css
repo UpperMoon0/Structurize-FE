@@ -1,0 +1,12 @@
+.structure-details-container {
+    display: flex;
+    flex-direction: column;
+    margin: 100px auto;
+    padding: 50px;
+    border: 2px solid #e0e0e0;
+    width: 50%;
+}
+
+.structure-details-container h1 {
+    text-align: center;
+}

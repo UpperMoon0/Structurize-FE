@@ -1,0 +1,28 @@
+.upload-structure-container {
+    display: flex;
+    flex-direction: column;
+    margin: 100px auto;
+    padding: 50px;
+    border: 2px solid #e0e0e0;
+    width: 50%;
+}
+
+.upload-structure-container h1 {
+    text-align: center;
+}
+
+.upload-structure-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-structure-form div {
+    text-align: left;
+    margin: 10px auto 10px;
+}
+
+.upload-structure-form button {
+    width: 60px;
+}

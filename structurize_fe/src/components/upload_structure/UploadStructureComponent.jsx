@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import StructureService from '../../api/StructureService.js';
+import './UploadStructure.css';
 
 function UploadStructureComponent() {
     const [name, setName] = useState('');
@@ -23,8 +24,9 @@ function UploadStructureComponent() {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div className="upload-structure-container">
+            <h1>Upload Structure</h1>
+            <form onSubmit={handleSubmit} className="upload-structure-form">
                 <div>
                     <label htmlFor="name">Name:</label>
                     <input

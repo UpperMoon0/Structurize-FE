@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from "prop-types";
 import { Link } from 'react-router-dom';
-import './structure-list.css';
+import './StructureList.css';
 
 StructureCardComponent.propTypes = {
     structure: PropTypes.shape({
