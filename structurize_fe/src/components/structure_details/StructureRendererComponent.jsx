@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
+import GeometryService from "../../api/GeometryService.js";
 
 StructureRendererComponent.propTypes = {
     structure: PropTypes.arrayOf(
         PropTypes.arrayOf(
             PropTypes.arrayOf(
-                PropTypes.string
+                PropTypes.shape({
+                    id: PropTypes.string.isRequired,
+                    properties: PropTypes.object
+                })
             )
         )
     ).isRequired,
@@ -18,12 +22,13 @@ StructureRendererComponent.propTypes = {
             name: PropTypes.string.isRequired,
             textures: PropTypes.object.isRequired
         })
-    ).isRequired,
+    ).isRequired
 };
 
 // This code is a mess, needs cleanup
 function StructureRendererComponent({ structure, blocks }) {
     const mountRef = useRef(null);
+    const geometryService = new GeometryService();
 
     useEffect(() => {
         const mount = mountRef.current;
@@ -37,12 +42,17 @@ function StructureRendererComponent({ structure, blocks }) {
 
         // Renderer
         const renderer= new THREE.WebGLRenderer();
-        renderer.outputEncoding = 3001;
+        //renderer.outputEncoding = 3001;
         renderer.setSize(mount.clientWidth, mount.clientHeight);
         mount.appendChild(renderer.domElement);
 
         // Geometry
-        const geometry = new THREE.BoxGeometry();
+        const blockGeometry = geometryService.getBlockGeometry();
+        const stairsGeometry = geometryService.getStairsGeometry();
+        const slabGeometry = geometryService.getSlabGeometry();
+
+        console.log('blockGeometry ' + blockGeometry + ' slabGeometry ' + slabGeometry);
+
 
         // Collect geometries to merge
         const geometries = [];
@@ -50,13 +60,39 @@ function StructureRendererComponent({ structure, blocks }) {
         // Iterate over the 3D array and create cubes
         structure.forEach((layer, y) => {
             layer.forEach((row, x) => {
-                row.forEach((cube, z) => {
-                    if (cube !== 'minecraft:air') {
-                        const block = blocks.find(b => b.id === cube);
+                row.forEach((position, z) => {
+                    if (position.id !== 'minecraft:air') {
+                        const block = blocks.find(b => b.id === position.id);
                         if (block) {
-                            const cubeGeometry = geometry.clone();
-                            cubeGeometry.translate(x, -y, z);
-                            geometries.push(cubeGeometry);
+                            let geometry;
+
+                            console.log('Type: ' + position.properties.type);
+                            switch (position.properties.type) {
+                                case 3:
+                                    geometry = stairsGeometry.clone();
+                                    switch (position.properties.facing) {
+                                        case 1: // East
+                                            geometry.rotateY(-Math.PI / 2);
+                                            break;
+                                        case 2: // South
+                                            geometry.rotateY(Math.PI);
+                                            break;
+                                        case 3: // West
+                                            geometry.rotateY(Math.PI / 2);
+                                            break;
+                                    }
+
+                                    // Flip the stairs if half
+                                    if (position.properties.half === true) {
+                                        geometry.rotateX(Math.PI);
+                                    }
+                                    break;
+                                default:
+                                    geometry = blockGeometry.clone();
+                            }
+
+                            geometry.translate(x, -y, z);
+                            geometries.push(geometry);
 
                             // Apply texture to the material
                             const textureBase64 = block.textures.all;
@@ -64,14 +100,14 @@ function StructureRendererComponent({ structure, blocks }) {
                             const texture = textureLoader.load(
                                 'data:image/png;base64,' + textureBase64,
                                 () => {
-                                    texture.needsUpdate = true; // Ensure texture is updated
+                                    texture.needsUpdate = true;
                                     texture.minFilter = THREE.NearestFilter;
                                     texture.magFilter = THREE.NearestFilter;
                                     texture.generateMipmaps = false;
                                     texture.colorSpace = THREE.SRGBColorSpace;
 
                                     const material = new THREE.MeshBasicMaterial({ map: texture });
-                                    const mesh = new THREE.Mesh(cubeGeometry, material);
+                                    const mesh = new THREE.Mesh(geometry, material);
                                     scene.add(mesh);
                                 },
                                 undefined,

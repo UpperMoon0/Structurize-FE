@@ -10,7 +10,7 @@ function StructureDetailsComponent() {
     const [structure, setStructure] = useState({
         name: "Unloaded",
         description: "Unloaded",
-        blockIds: [[["minecraft:dirt"]]]
+        blocksData: []
     });
     const [blocks, setBlocks] = useState([]);
 
@@ -51,7 +51,7 @@ function StructureDetailsComponent() {
                 </div>
             )}
             <div className="structure-renderer-container">
-                <StructureRendererComponent structure={structure.blockIds} blocks={blocks} />
+                <StructureRendererComponent structure={structure.blocksData} blocks={blocks} />
             </div>
         </div>
     );
