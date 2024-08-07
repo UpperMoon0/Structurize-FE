@@ -48,11 +48,12 @@ function StructureRendererComponent({ structure, blocks }) {
 
         // Geometry
         const blockGeometry = geometryService.getBlockGeometry();
-        const stairsGeometry = geometryService.getStairsGeometry();
+        const straightStairsGeometry = geometryService.getStraightStairsGeometry();
+        const innerCornerStairsGeometry = geometryService.getInnerCornerStairsGeometry();
+        const outerCornerStairsGeometry = geometryService.getOuterCornerStairsGeometry();
         const slabGeometry = geometryService.getSlabGeometry();
-
-        console.log('blockGeometry ' + blockGeometry + ' slabGeometry ' + slabGeometry);
-
+        const pressurePlateGeometry = geometryService.getPressurePlateGeometry();
+        const wallGeometry = geometryService.getWallGeometry();
 
         // Collect geometries to merge
         const geometries = [];
@@ -66,26 +67,69 @@ function StructureRendererComponent({ structure, blocks }) {
                         if (block) {
                             let geometry;
 
-                            console.log('Type: ' + position.properties.type);
                             switch (position.properties.type) {
-                                case 3:
-                                    geometry = stairsGeometry.clone();
+                                case 1: // Wall
+                                    geometry = wallGeometry.clone();
+                                    break;
+                                case 2: // Slab
+                                    geometry = slabGeometry.clone();
+                                    if (position.properties.half === true) {
+                                        geometry.translate(0, 0.5, 0);
+                                    }
+                                    break;
+                                case 3: // Stairs
+                                    switch (position.properties.shape) {
+                                        case 1: // Inner left
+                                            geometry = innerCornerStairsGeometry.clone();
+                                            if (position.properties.half === true) {
+                                                geometry.rotateX(Math.PI);
+                                                geometry.rotateY(-Math.PI / 2);
+                                            }
+                                            break;
+                                        case 2: // Inner right
+                                            geometry = innerCornerStairsGeometry.clone();
+                                            geometry.rotateY(Math.PI / 2);
+                                            if (position.properties.half === true) {
+                                                geometry.rotateX(Math.PI);
+                                                geometry.rotateY(Math.PI / 2);
+                                            }
+                                            break;
+                                        case 3: // Outer left
+                                            geometry = outerCornerStairsGeometry.clone();
+                                            if (position.properties.half === true) {
+                                                geometry.rotateX(Math.PI);
+                                                geometry.rotateY(-Math.PI / 2);
+                                            }
+                                            break;
+                                        case 4: // Outer right
+                                            geometry = outerCornerStairsGeometry.clone();
+                                            geometry.rotateY(Math.PI / 2);
+                                            if (position.properties.half === true) {
+                                                geometry.rotateX(Math.PI);
+                                                geometry.rotateY(Math.PI / 2);
+                                            }
+                                            break;
+                                        default: // Straight
+                                            geometry = straightStairsGeometry.clone();
+                                            if (position.properties.half === true) {
+                                                geometry.rotateX(Math.PI);
+                                            }
+                                    }
+
                                     switch (position.properties.facing) {
                                         case 1: // East
-                                            geometry.rotateY(-Math.PI / 2);
+                                            geometry.rotateY(Math.PI / 2);
                                             break;
                                         case 2: // South
                                             geometry.rotateY(Math.PI);
                                             break;
                                         case 3: // West
-                                            geometry.rotateY(Math.PI / 2);
+                                            geometry.rotateY(-Math.PI / 2);
                                             break;
                                     }
-
-                                    // Flip the stairs if half
-                                    if (position.properties.half === true) {
-                                        geometry.rotateX(Math.PI);
-                                    }
+                                    break;
+                                case 4: // Pressure plate
+                                    geometry = pressurePlateGeometry.clone();
                                     break;
                                 default:
                                     geometry = blockGeometry.clone();
