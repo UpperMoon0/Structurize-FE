@@ -43,6 +43,15 @@ function StructureDetailsComponent() {
         fetchStructure().then();
     }, [id]);
 
+    const handleDownload = async () => {
+        const structureService = new StructureService();
+        try {
+            await structureService.downloadNBT(id);
+        } catch (error) {
+            console.error('Error downloading NBT file:', error);
+        }
+    };
+
     return (
         <div className="structure-details-container">
             {structure && (
@@ -54,6 +63,7 @@ function StructureDetailsComponent() {
             <div className="structure-renderer-container">
                 <StructureRendererComponent structure={structure.blocks} palette={structure.palette} blocks={blocks} />
             </div>
+            <button onClick={handleDownload}>Download NBT</button>
         </div>
     );
 }

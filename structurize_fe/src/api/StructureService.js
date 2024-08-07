@@ -45,6 +45,31 @@ class StructureService {
       throw error;
     }
   }
+
+  async downloadNBT(id) {
+    try {
+      const response = await this.api.get(`/structure/download-nbt/${id}`, {
+        responseType: 'blob'
+      });
+
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      // Create an anchor element and trigger a download
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'structure.nbt');
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up and remove the link
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  }
 }
 
 export default StructureService;
