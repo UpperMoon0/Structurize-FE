@@ -9,12 +9,15 @@ StructureRendererComponent.propTypes = {
     structure: PropTypes.arrayOf(
         PropTypes.arrayOf(
             PropTypes.arrayOf(
-                PropTypes.shape({
-                    id: PropTypes.string.isRequired,
-                    properties: PropTypes.object
-                })
+                PropTypes.number.isRequired
             )
         )
+    ).isRequired,
+    palette: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          properties: PropTypes.object.isRequired
+        })
     ).isRequired,
     blocks: PropTypes.arrayOf(
         PropTypes.shape({
@@ -25,8 +28,14 @@ StructureRendererComponent.propTypes = {
     ).isRequired
 };
 
+StructureRendererComponent.defaultProps = {
+    structure: [[[0]]],
+    palette: [{ id: 'minecraft:air', properties: {type: 0} }],
+    blocks: [{ id: 'minecraft:air', name: 'Air', textures: { all: ''} }],
+};
+
 // This code is a mess, needs cleanup
-function StructureRendererComponent({ structure, blocks }) {
+function StructureRendererComponent({ structure, palette, blocks }) {
     const mountRef = useRef(null);
     const geometryService = new GeometryService();
 
@@ -62,26 +71,27 @@ function StructureRendererComponent({ structure, blocks }) {
         structure.forEach((layer, y) => {
             layer.forEach((row, x) => {
                 row.forEach((position, z) => {
-                    if (position.id !== 'minecraft:air') {
-                        const block = blocks.find(b => b.id === position.id);
+                    const blockData = palette[position];
+                    if (blockData.id !== 'minecraft:air') {
+                        const block = blocks.find(b => b.id === blockData.id);
                         if (block) {
                             let geometry;
 
-                            switch (position.properties.type) {
+                            switch (blockData.properties.type) {
                                 case 1: // Wall
                                     geometry = wallGeometry.clone();
                                     break;
                                 case 2: // Slab
                                     geometry = slabGeometry.clone();
-                                    if (position.properties.half === true) {
+                                    if (blockData.properties.half === true) {
                                         geometry.translate(0, 0.5, 0);
                                     }
                                     break;
                                 case 3: // Stairs
-                                    switch (position.properties.shape) {
+                                    switch (blockData.properties.shape) {
                                         case 1: // Inner left
                                             geometry = innerCornerStairsGeometry.clone();
-                                            if (position.properties.half === true) {
+                                            if (blockData.properties.half === true) {
                                                 geometry.rotateX(Math.PI);
                                                 geometry.rotateY(-Math.PI / 2);
                                             }
@@ -89,14 +99,14 @@ function StructureRendererComponent({ structure, blocks }) {
                                         case 2: // Inner right
                                             geometry = innerCornerStairsGeometry.clone();
                                             geometry.rotateY(Math.PI / 2);
-                                            if (position.properties.half === true) {
+                                            if (blockData.properties.half === true) {
                                                 geometry.rotateX(Math.PI);
                                                 geometry.rotateY(Math.PI / 2);
                                             }
                                             break;
                                         case 3: // Outer left
                                             geometry = outerCornerStairsGeometry.clone();
-                                            if (position.properties.half === true) {
+                                            if (blockData.properties.half === true) {
                                                 geometry.rotateX(Math.PI);
                                                 geometry.rotateY(-Math.PI / 2);
                                             }
@@ -104,19 +114,19 @@ function StructureRendererComponent({ structure, blocks }) {
                                         case 4: // Outer right
                                             geometry = outerCornerStairsGeometry.clone();
                                             geometry.rotateY(Math.PI / 2);
-                                            if (position.properties.half === true) {
+                                            if (blockData.properties.half === true) {
                                                 geometry.rotateX(Math.PI);
                                                 geometry.rotateY(Math.PI / 2);
                                             }
                                             break;
                                         default: // Straight
                                             geometry = straightStairsGeometry.clone();
-                                            if (position.properties.half === true) {
+                                            if (blockData.properties.half === true) {
                                                 geometry.rotateX(Math.PI);
                                             }
                                     }
 
-                                    switch (position.properties.facing) {
+                                    switch (blockData.properties.facing) {
                                         case 1: // East
                                             geometry.rotateY(Math.PI / 2);
                                             break;

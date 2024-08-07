@@ -51,7 +51,7 @@ function StructureDetailsComponent() {
                 </div>
             )}
             <div className="structure-renderer-container">
-                <StructureRendererComponent structure={structure.blocksData} blocks={blocks} />
+                <StructureRendererComponent structure={structure.blocks} palette={structure.palette} blocks={blocks} />
             </div>
         </div>
     );
