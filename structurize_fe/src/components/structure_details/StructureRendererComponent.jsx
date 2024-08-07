@@ -28,18 +28,16 @@ StructureRendererComponent.propTypes = {
     ).isRequired
 };
 
-StructureRendererComponent.defaultProps = {
-    structure: [[[0]]],
-    palette: [{ id: 'minecraft:air', properties: {type: 0} }],
-    blocks: [{ id: 'minecraft:air', name: 'Air', textures: { all: ''} }],
-};
-
 // This code is a mess, needs cleanup
-function StructureRendererComponent({ structure, palette, blocks }) {
+function StructureRendererComponent({
+    structure = [[[0]]],
+    palette = [{ id: 'minecraft:air', properties: { type: 0 } }],
+    blocks = [{ id: 'minecraft:air', name: 'Air', textures: { all: '' } }]
+}) {
     const mountRef = useRef(null);
-    const geometryService = new GeometryService();
 
     useEffect(() => {
+
         const mount = mountRef.current;
 
         // Scene
@@ -56,6 +54,7 @@ function StructureRendererComponent({ structure, palette, blocks }) {
         mount.appendChild(renderer.domElement);
 
         // Geometry
+        let geometryService = new GeometryService();
         const blockGeometry = geometryService.getBlockGeometry();
         const straightStairsGeometry = geometryService.getStraightStairsGeometry();
         const innerCornerStairsGeometry = geometryService.getInnerCornerStairsGeometry();
@@ -203,7 +202,7 @@ function StructureRendererComponent({ structure, palette, blocks }) {
         return () => {
             mount.removeChild(renderer.domElement);
         };
-    }, [structure, blocks]);
+    }, [structure, blocks, palette]);
 
     return <div ref={mountRef} style={{ width: '100%', height: '100vh' }} />;
 }

@@ -10,7 +10,8 @@ function StructureDetailsComponent() {
     const [structure, setStructure] = useState({
         name: "Unloaded",
         description: "Unloaded",
-        blocksData: []
+        blocks: [[[0]]],
+        palette: [{ id: 'minecraft:air', properties: { type: 0 } }]
     });
     const [blocks, setBlocks] = useState([]);
 
