@@ -46,7 +46,7 @@ class StructureService {
     }
   }
 
-  async downloadNBT(id) {
+  async downloadNBT(id, filename) {
     try {
       const response = await this.api.get(`/structure/download-nbt/${id}`, {
         responseType: 'blob'
@@ -58,7 +58,7 @@ class StructureService {
       // Create an anchor element and trigger a download
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'structure.nbt');
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
 

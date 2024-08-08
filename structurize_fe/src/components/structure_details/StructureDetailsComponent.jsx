@@ -46,7 +46,8 @@ function StructureDetailsComponent() {
     const handleDownload = async () => {
         const structureService = new StructureService();
         try {
-            await structureService.downloadNBT(id);
+            const filename = structure.name.replace(/[^a-zA-Z0-9_\s]/g, '').replace(/\s+/g, '_').toLowerCase() + '.nbt';
+            await structureService.downloadNBT(id, filename);
         } catch (error) {
             console.error('Error downloading NBT file:', error);
         }
