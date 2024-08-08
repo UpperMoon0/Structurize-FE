@@ -17,16 +17,19 @@ class StructureService {
     }
   }
 
-  async createStructureFromNBT(name, description, file) {
+  async uploadStructureAsNBT(name, description, file) {
     const formData = new FormData();
     formData.append('name', name);
     formData.append('description', description);
     formData.append('file', file);
 
+    const token = localStorage.getItem('jwtToken');
+
     try {
       const response = await this.api.post('/structure/create-structure-from-nbt', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         }
       });
       return response.data;
@@ -36,20 +39,15 @@ class StructureService {
     }
   }
 
-  async getAllStructures() {
-    try {
-      const response = await this.api.get('/structure/get-all-structures');
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-    }
-  }
+  async downloadStructureAsNBT(id, filename) {
+    const token = localStorage.getItem('jwtToken');
 
-  async downloadNBT(id, filename) {
     try {
       const response = await this.api.get(`/structure/download-nbt/${id}`, {
-        responseType: 'blob'
+        responseType: 'blob',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       // Create a URL for the blob
@@ -65,6 +63,16 @@ class StructureService {
       // Clean up and remove the link
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  }
+
+  async getAllStructures() {
+    try {
+      const response = await this.api.get('/structure/get-all-structures');
+      return response.data;
     } catch (error) {
       console.error('Error fetching data:', error);
       throw error;

@@ -1,17 +1,20 @@
-import { useState } from 'react';
-import AuthService from '../../api/AuthService';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './LoginComponent.css';
+import { AuthContext } from '../../context/AuthContext.jsx';
 
 function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const authService = new AuthService();
+    const { login } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await authService.login(email, password);
-            console.log('Login successful:', response);
+            await login(email, password);
+            console.log('Login successful');
+            navigate('/structure-list');
         } catch (error) {
             console.error('Login failed:', error);
         }
@@ -43,6 +46,9 @@ function LoginComponent() {
                 </div>
                 <button type="submit">Login</button>
             </form>
+            <p>
+                <a href="/register">Create an account</a>
+            </p>
         </div>
     );
 }

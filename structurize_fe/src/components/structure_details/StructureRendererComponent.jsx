@@ -5,29 +5,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 import GeometryService from "../../api/GeometryService.js";
 
-StructureRendererComponent.propTypes = {
-    structure: PropTypes.arrayOf(
-        PropTypes.arrayOf(
-            PropTypes.arrayOf(
-                PropTypes.number.isRequired
-            )
-        )
-    ).isRequired,
-    palette: PropTypes.arrayOf(
-        PropTypes.shape({
-          id: PropTypes.string.isRequired,
-          properties: PropTypes.object.isRequired
-        })
-    ).isRequired,
-    blocks: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            textures: PropTypes.object.isRequired
-        })
-    ).isRequired
-};
-
 // This code is a mess, needs cleanup
 function StructureRendererComponent({
     structure = [[[0]]],
@@ -214,5 +191,28 @@ function StructureRendererComponent({
 
     return <div ref={mountRef} style={{ width: '100%', height: '100vh' }} />;
 }
+
+StructureRendererComponent.propTypes = {
+    structure: PropTypes.arrayOf(
+        PropTypes.arrayOf(
+            PropTypes.arrayOf(
+                PropTypes.number.isRequired
+            )
+        )
+    ).isRequired,
+    palette: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            properties: PropTypes.object.isRequired
+        })
+    ).isRequired,
+    blocks: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            textures: PropTypes.object.isRequired
+        })
+    ).isRequired
+};
 
 export default StructureRendererComponent;

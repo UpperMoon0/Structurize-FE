@@ -16,7 +16,7 @@ function UploadStructureComponent() {
         formData.append('file', file);
 
         try {
-            const response = await structureService.createStructureFromNBT(name, description, file);
+            const response = await structureService.uploadStructureAsNBT(name, description, file);
             console.log('Structure created:', response);
         } catch (error) {
             console.error('Error creating structure:', error);

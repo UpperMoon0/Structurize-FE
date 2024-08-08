@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect, useContext} from 'react';
 import { useParams } from 'react-router-dom';
 import StructureService from '../../api/StructureService.js';
 import BlockService from '../../api/BlockService.js';
 import StructureRendererComponent from "./StructureRendererComponent.jsx";
 import './StructureDetailsComponent.css';
+import {AuthContext} from "../../context/AuthContext.jsx";
 
 function StructureDetailsComponent() {
     const { id } = useParams();
@@ -14,6 +15,7 @@ function StructureDetailsComponent() {
         palette: [{ id: 'minecraft:air', properties: { type: 0 } }]
     });
     const [blocks, setBlocks] = useState([]);
+    const { isLoggedIn } = useContext(AuthContext);
 
     useEffect(() => {
         const blockService = new BlockService();
@@ -47,7 +49,7 @@ function StructureDetailsComponent() {
         const structureService = new StructureService();
         try {
             const filename = structure.name.replace(/[^a-zA-Z0-9_\s]/g, '').replace(/\s+/g, '_').toLowerCase() + '.nbt';
-            await structureService.downloadNBT(id, filename);
+            await structureService.downloadStructureAsNBT(id, filename);
         } catch (error) {
             console.error('Error downloading NBT file:', error);
         }
@@ -64,7 +66,11 @@ function StructureDetailsComponent() {
             <div className="structure-renderer-container">
                 <StructureRendererComponent structure={structure.blocks} palette={structure.palette} blocks={blocks} />
             </div>
-            <button onClick={handleDownload}>Download NBT</button>
+            {isLoggedIn ? (
+                <button onClick={handleDownload}>Download .nbt file</button>
+            ) : (
+                <p>You need to login to download the structure</p>
+            )}
         </div>
     );
 }

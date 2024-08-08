@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
 import './RegisterComponent.css';
 
@@ -8,12 +9,14 @@ function RegisterComponent() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const authService = new AuthService();
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await authService.register(email, username, password, confirmPassword);
             console.log('Registration successful:', response);
+            navigate('/login');
         } catch (error) {
             console.error('Registration failed:', error);
         }

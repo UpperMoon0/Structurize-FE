@@ -3,14 +3,6 @@ import PropTypes from "prop-types";
 import { Link } from 'react-router-dom';
 import './StructureListComponent.css';
 
-StructureCardComponent.propTypes = {
-    structure: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired
-    }).isRequired
-};
-
 function StructureCardComponent({ structure }) {
 
     useEffect(() => {
@@ -24,5 +16,13 @@ function StructureCardComponent({ structure }) {
         </Link>
     );
 }
+
+StructureCardComponent.propTypes = {
+    structure: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired
+    }).isRequired
+};
 
 export default StructureCardComponent;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-class StructureService {
+class AuthService {
     constructor() {
         this.api = axios.create({
             baseURL: import.meta.env.VITE_BE_API_URL
@@ -8,13 +8,12 @@ class StructureService {
     }
 
     async register(email, username, password, confirmPassword) {
-        // Check if passwords match
         if (password !== confirmPassword) {
             throw new Error('Passwords do not match');
         }
 
         try {
-            const response = await this.api.post(`/auth/register`, {email: email, username: username, password: password});
+            const response = await this.api.post(`/auth/register`, { email, username, password });
             return response.data;
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -22,15 +21,27 @@ class StructureService {
         }
     }
 
-    async login(email, password) {
+    async login(email, password, setIsLoggedIn) {
         try {
-            const response = await this.api.post(`/auth/login`, {email: email, password: password});
+            const response = await this.api.post(`/auth/login`, { email, password });
+            const token = response.data;
+            localStorage.setItem('jwtToken', token);
+            setIsLoggedIn(true);
             return response.data;
         } catch (error) {
             console.error('Error fetching data:', error);
             throw error;
         }
+    }
+
+    logout(setIsLoggedIn) {
+        localStorage.removeItem('jwtToken');
+        setIsLoggedIn(false);
+    }
+
+    isLoggedIn() {
+        return !!localStorage.getItem('jwtToken');
     }
 }
 
-export default StructureService;
+export default AuthService;
