@@ -43,9 +43,17 @@ function StructureRendererComponent({
         // Scene
         const scene = new THREE.Scene();
 
+        // Calculate the center point of the 3D block space
+        const centerX = structure[0][0].length / 2;
+        const centerY = -structure.length / 2;
+        const centerZ = structure[0].length/ 2;
+        const centerPoint = new THREE.Vector3(centerX, centerY, centerZ);
+        const avgSize = (structure[0][0].length + structure.length + structure[0].length) / 3;
+
         // Camera
         const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 1000);
-        camera.position.z = 5;
+        camera.position.set(centerPoint.x, centerPoint.y, centerPoint.z + avgSize * 2);
+        camera.lookAt(centerPoint);
 
         // Renderer
         const renderer= new THREE.WebGLRenderer();
@@ -184,6 +192,7 @@ function StructureRendererComponent({
 
         // Controls
         const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(centerPoint.x, centerPoint.y, centerPoint.z);
         controls.enableDamping = true;
         controls.dampingFactor = 0.25;
         controls.enableZoom = true;
@@ -191,7 +200,6 @@ function StructureRendererComponent({
         // Animation loop
         const animate = function () {
             requestAnimationFrame(animate);
-
             controls.update();
             renderer.render(scene, camera);
         };
