@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import StructureService from '../../api/StructureService.js';
 import BlockService from '../../api/BlockService.js';
 import StructureRendererComponent from "./StructureRendererComponent.jsx";
-import './StructureDetails.css';
+import './StructureDetailsComponent.css';
 
 function StructureDetailsComponent() {
     const { id } = useParams();

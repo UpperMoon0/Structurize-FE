@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import StructureService from "../../api/StructureService.js";
 import StructureCardComponent from "./StructureCardComponent.jsx";
-import './StructureList.css';
+import './StructureListComponent.css';
 
 function StructureListComponent() {
     const [structures, setStructures] = useState([]);
