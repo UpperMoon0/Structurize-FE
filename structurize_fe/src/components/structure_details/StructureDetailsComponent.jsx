@@ -1,20 +1,34 @@
-import {useState, useEffect, useContext} from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import StructureService from '../../api/StructureService.js';
 import BlockService from '../../api/BlockService.js';
 import StructureRendererComponent from "./StructureRendererComponent.jsx";
 import './StructureDetailsComponent.css';
-import {AuthContext} from "../../context/AuthContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
+import PropTypes from "prop-types";
+import StructureListComponent from "../structure_list/StructureListComponent.jsx";
+import structureThumbnail from "../../assets/default_structure_thumbnail.png";
+import StructureCommentService from "../../api/StructureCommentService.js";
 
 function StructureDetailsComponent() {
     const { id } = useParams();
-    const [structure, setStructure] = useState({
-        name: "Unloaded",
-        description: "Unloaded",
-        blocks: [[[0]]],
-        palette: [{ id: 'minecraft:air', properties: { type: 0 } }]
+    const [structureDetails, setStructureDetails] = useState({
+        structure: {
+            name: '',
+            description: '',
+            blocks: [[[0]]],
+            palette: [{ id: 'minecraft:air', properties: { type: 0 } }],
+            download: 0,
+            createdAt: '',
+            updatedAt: ''
+        },
+        authorName: '',
+        likeCount: 0,
+        comments: []
     });
     const [blocks, setBlocks] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const commentService = new StructureCommentService();
     const { isLoggedIn } = useContext(AuthContext);
 
     useEffect(() => {
@@ -31,48 +45,134 @@ function StructureDetailsComponent() {
         fetchBlocks().then();
     }, []);
 
-    useEffect(() => {
+    const fetchStructureDetails = useCallback(async () => {
         const structureService = new StructureService();
-        const fetchStructure = async () => {
-            try {
-                const fetchedStructure = await structureService.getStructureById(id);
-                setStructure(fetchedStructure);
-            } catch (error) {
-                console.error('Error fetching structure:', error);
-            }
-        };
-
-        fetchStructure().then();
+        try {
+            const fetchedStructureDetails = await structureService.getStructureDetails(id);
+            setStructureDetails(fetchedStructureDetails);
+        } catch (error) {
+            console.error('Error fetching structure:', error);
+        }
     }, [id]);
+
+    useEffect(() => {
+        fetchStructureDetails().then();
+    }, [fetchStructureDetails, id]);
 
     const handleDownload = async () => {
         const structureService = new StructureService();
         try {
-            const filename = structure.name.replace(/[^a-zA-Z0-9_\s]/g, '').replace(/\s+/g, '_').toLowerCase() + '.nbt';
+            const filename = structureDetails.name.replace(/[^a-zA-Z0-9_\s]/g, '').replace(/\s+/g, '_').toLowerCase() + '.nbt';
             await structureService.downloadStructureAsNBT(id, filename);
         } catch (error) {
             console.error('Error downloading NBT file:', error);
         }
     };
 
+    const handleCommentSubmit = async (event) => {
+        event.preventDefault();
+        if (!newComment.trim()) return;
+
+        try {
+            await commentService.createComment(id, newComment);
+            setNewComment('');
+            await fetchStructureDetails();
+        } catch (error) {
+            console.error('Error creating comment:', error);
+        }
+    };
+
     return (
         <div className="structure-details-container">
-            {structure && (
+            <div>
+                <img className="structure-details-image" src={structureThumbnail} alt="Structure image"/>
                 <div>
-                    <h1>{structure.name}</h1>
-                    <p>{structure.description}</p>
+                    <h1>{structureDetails.structure.name}</h1>
+                    <h3>Author: {structureDetails.authorName}</h3>
+                    <p>Size: {structureDetails.structure.blocks.length}x{structureDetails.structure.blocks[0].length}x{structureDetails.structure.blocks[0][0].length}</p>
+                    <p>Created: {new Date(structureDetails.structure.createdAt).toLocaleString()}</p>
+                    <p>Last updated: {new Date(structureDetails.structure.updatedAt).toLocaleString()}</p>
                 </div>
-            )}
-            <div className="structure-renderer-container">
-                <StructureRendererComponent structure={structure.blocks} palette={structure.palette} blocks={blocks} />
             </div>
-            {isLoggedIn ? (
-                <button onClick={handleDownload}>Download .nbt file</button>
-            ) : (
-                <p>You need to login to download the structure</p>
-            )}
+            <div>
+                <h2>Download</h2>
+                {isLoggedIn ? (
+                    <button onClick={handleDownload}>.nbt</button>
+                ) : (
+                    <p>You need to login to download the structure</p>
+                )}
+            </div>
+            <div>
+                <h2>Description</h2>
+                <p>{structureDetails.structure.description}</p>
+            </div>
+            <div className="structure-renderer-container">
+                <h2>3D Render</h2>
+                <StructureRendererComponent structure={structureDetails.structure.blocks}
+                                            palette={structureDetails.structure.palette} blocks={blocks}/>
+            </div>
+            <div>
+                <h2>Comments ({structureDetails.comments.length})</h2>
+                {isLoggedIn && (
+                    <form onSubmit={handleCommentSubmit} className="comment-form">
+                        <textarea
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="Add a comment"
+                            required
+                        />
+                        <button type="submit">Submit</button>
+                    </form>
+                )}
+                {structureDetails.comments.map((comment, index) => (
+                    <div key={index} className="comment">
+                        <h3>{comment.authorName}</h3>
+                        <p>{comment.content}</p>
+                        <p>Created: {new Date(comment.createdAt).toLocaleString()}</p>
+                        <p>Last updated: {new Date(comment.updatedAt).toLocaleString()}</p>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
+
+StructureListComponent.propTypes = {
+    structureDetails: PropTypes.shape({
+        structure: PropTypes.shape({
+            name: PropTypes.string,
+            description: PropTypes.string,
+            blocks: PropTypes.arrayOf(
+                PropTypes.arrayOf(
+                    PropTypes.arrayOf(
+                        PropTypes.shape({
+                            id: PropTypes.string,
+                            properties: PropTypes.object
+                        })
+                    )
+                )
+            ),
+            palette: PropTypes.arrayOf(
+                PropTypes.shape({
+                    id: PropTypes.string,
+                    properties: PropTypes.object
+                })
+            ),
+            download: PropTypes.number,
+            createdAt: PropTypes.string,
+            updatedAt: PropTypes.string
+        }),
+        authorName: PropTypes.string,
+        likeCount: PropTypes.number,
+        comments: PropTypes.arrayOf(
+            PropTypes.shape({
+                authorName: PropTypes.string,
+                content: PropTypes.string,
+                createdAt: PropTypes.string,
+                updatedAt: PropTypes.string
+            })
+        )
+    })
+};
 
 export default StructureDetailsComponent;

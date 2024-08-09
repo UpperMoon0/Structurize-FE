@@ -7,9 +7,9 @@ class StructureService {
     });
   }
 
-  async getStructureById(id) {
+  async getStructureDetails(id) {
     try {
-      const response = await this.api.get(`/structure/get-structure?id=${id}`);
+      const response = await this.api.get(`/structure/get-structure-details?id=${id}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching data:', error);

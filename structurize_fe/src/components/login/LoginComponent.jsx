@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LoginComponent.css';
 import { AuthContext } from '../../context/AuthContext.jsx';
 
@@ -7,14 +7,16 @@ function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
     const { login } = useContext(AuthContext);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             await login(email, password);
+            navigate('/structure-list');
         } catch (error) {
-            setErrorMessage('Invalid email or password');
+            setErrorMessage("Invalid email or password")
         }
     };
 

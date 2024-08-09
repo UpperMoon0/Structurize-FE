@@ -34,7 +34,6 @@ function StructureListComponent() {
     );
 }
 
-// Prop type
 StructureListComponent.propTypes = {
     structureList: PropTypes.shape({
         structures: PropTypes.arrayOf(

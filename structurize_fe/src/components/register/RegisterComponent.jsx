@@ -15,8 +15,7 @@ function RegisterComponent() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await authService.register(email, username, password, confirmPassword);
-            console.log('Registration successful:', response);
+            await authService.register(email, username, password, confirmPassword);
             navigate('/login');
         } catch (error) {
             if (error.message === 'Passwords do not match') {
@@ -24,7 +23,6 @@ function RegisterComponent() {
             } else {
                 setErrorMessage(error.response?.data || 'Registration failed');
             }
-            console.error('Registration failed:', error);
         }
     };
 
