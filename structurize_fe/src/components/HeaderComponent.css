@@ -17,8 +17,13 @@
     text-align: center;
 }
 
+.header-left {
+    font-size: 1.2rem;
+}
+
 .header-right {
     text-align: right;
+    font-size: 1.2rem;
 }
 
 .header a {

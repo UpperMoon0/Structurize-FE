@@ -22,6 +22,16 @@ class StructureCommentService {
             throw error;
         }
     }
+
+    async getCommentsByStructureId(structureId) {
+        try {
+            const response = await this.api.get(`/structure-comment/get-by-structure?structureId=${structureId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+            throw error;
+        }
+    }
 }
 
 export default StructureCommentService;
