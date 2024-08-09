@@ -59,3 +59,8 @@ button:hover {
 .create-account-link:hover {
     background-color: #218838;
 }
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+}
