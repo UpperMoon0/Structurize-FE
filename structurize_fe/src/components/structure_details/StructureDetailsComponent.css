@@ -1,12 +1,97 @@
 .structure-details-container {
     display: flex;
     flex-direction: column;
-    margin: 100px auto;
+    margin: 100px auto 100px;
     padding: 50px;
-    border: 2px solid #e0e0e0;
-    width: 50%;
+    border: 4px solid #e0e0e0;
+    width: 60%;
 }
 
-.structure-details-container h1 {
-    text-align: center;
+.structure-details-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.structure-details-header button,
+.structure-details-header button:hover {
+    background: #ffffff;
+}
+
+.structure-details-header img {
+    width: 60%;
+}
+
+.sd-header-inner-div {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sd-header-inner-div div {
+    text-align: left;
+    width: 60%;
+}
+
+.sd-header-inner-div-1,
+.sd-header-inner-div-2 {
+    border: 4px solid #e0e0e0;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+.sd-header-inner-div-2 button {
+    border-radius: 8px;
+}
+
+.sd-header-inner-div-3 {
+    margin-top: auto;
+}
+
+.structure-details-header div img {
+    width: 50px;
+    height: 50px;
+}
+
+.comment-box form {
+    display: flex;
+    width: 100%;
+}
+
+.comment-box textarea {
+    width: 80%;
+    height: 50px;
+    padding: 10px;
+    margin-right: 20px;
+}
+
+.comment-box button {
+    width: 100px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.comment {
+    width: 80%;
+    border: 4px solid #e0e0e0;
+    margin-top: 20px;
+}
+
+.comment-top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-top-left,
+.comment-top-right {
+    margin: 0 20px;
+}
+
+.comment-content {
+    border: 2px solid #e0e0e0;
+    margin: 0 20px 20px;
+    padding: 20px;
 }

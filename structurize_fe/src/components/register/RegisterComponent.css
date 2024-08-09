@@ -8,7 +8,7 @@
     margin: 300px auto;
 }
 
-h1 {
+.register-container h1 {
     margin-bottom: 20px;
 }
 
@@ -42,4 +42,9 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
 }

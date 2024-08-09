@@ -7,9 +7,9 @@ class StructureService {
     });
   }
 
-  async getStructureById(id) {
+  async getStructureDetails(id) {
     try {
-      const response = await this.api.get(`/structure/get-structure?id=${id}`);
+      const response = await this.api.get(`/structure/get-structure-details?id=${id}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -69,9 +69,14 @@ class StructureService {
     }
   }
 
-  async getAllStructures() {
+  async getStructureList(isLoggedIn) {
     try {
-      const response = await this.api.get('/structure/get-all-structures');
+      const headers = {};
+      if (isLoggedIn) {
+        const token = localStorage.getItem('jwtToken');
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      const response = await this.api.get('/structure/get-structure-list', { headers });
       return response.data;
     } catch (error) {
       console.error('Error fetching data:', error);

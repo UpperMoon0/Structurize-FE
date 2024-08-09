@@ -8,17 +8,21 @@ function RegisterComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const authService = new AuthService();
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await authService.register(email, username, password, confirmPassword);
-            console.log('Registration successful:', response);
+            await authService.register(email, username, password, confirmPassword);
             navigate('/login');
         } catch (error) {
-            console.error('Registration failed:', error);
+            if (error.message === 'Passwords do not match') {
+                setErrorMessage('Passwords do not match');
+            } else {
+                setErrorMessage(error.response?.data || 'Registration failed');
+            }
         }
     };
 
@@ -66,6 +70,7 @@ function RegisterComponent() {
                         required
                     />
                 </div>
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
                 <button type="submit">Register</button>
             </form>
         </div>

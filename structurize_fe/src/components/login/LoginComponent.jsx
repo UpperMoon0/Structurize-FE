@@ -1,20 +1,22 @@
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LoginComponent.css';
 import { AuthContext } from '../../context/AuthContext.jsx';
 
 function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
     const { login } = useContext(AuthContext);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             await login(email, password);
-            console.log('Login successful');
+            navigate('/structure-list');
         } catch (error) {
-            console.error('Login failed:', error);
+            setErrorMessage("Invalid email or password")
         }
     };
 
@@ -42,8 +44,9 @@ function LoginComponent() {
                         required
                     />
                 </div>
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
                 <button type="submit">Login</button>
-                <Link to="/register" className="create-account-link">Create new account</Link>
+                <Link to="/register" className="create-account-link">Create an account</Link>
             </form>
         </div>
     );
