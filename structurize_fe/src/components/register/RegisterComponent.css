@@ -1,18 +1,22 @@
-.login-container {
+.register-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     background-color: #f0f0f0;
+    width: 20%;
+    margin: 300px auto;
 }
 
-h2 {
+h1 {
     margin-bottom: 20px;
 }
 
-.form-group {
-    margin-bottom: 15px;
+.register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 label {
@@ -24,6 +28,7 @@ input {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 button {
@@ -32,6 +37,7 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 button:hover {

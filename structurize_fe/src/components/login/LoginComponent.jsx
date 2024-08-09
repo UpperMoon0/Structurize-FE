@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './LoginComponent.css';
 import { AuthContext } from '../../context/AuthContext.jsx';
 
@@ -7,14 +7,12 @@ function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useContext(AuthContext);
-    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             await login(email, password);
             console.log('Login successful');
-            navigate('/structure-list');
         } catch (error) {
             console.error('Login failed:', error);
         }
@@ -22,8 +20,8 @@ function LoginComponent() {
 
     return (
         <div className="login-container">
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
+            <h1>Login</h1>
+            <form onSubmit={handleSubmit} className="login-form">
                 <div className="form-group">
                     <label htmlFor="email">Email:</label>
                     <input
@@ -45,10 +43,8 @@ function LoginComponent() {
                     />
                 </div>
                 <button type="submit">Login</button>
+                <Link to="/register" className="create-account-link">Create new account</Link>
             </form>
-            <p>
-                <a href="/register">Create an account</a>
-            </p>
         </div>
     );
 }

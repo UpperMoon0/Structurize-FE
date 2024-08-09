@@ -12,7 +12,7 @@ function HeaderComponent() {
                 <Link to="/">Structure list</Link>
             </div>
             <div className="header-middle">
-                <h1>Structurize</h1>
+                <h1>StructureShare</h1>
             </div>
             <div className="header-right">
                 {isLoggedIn ? (
