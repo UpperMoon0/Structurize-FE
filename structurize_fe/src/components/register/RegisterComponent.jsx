@@ -23,9 +23,9 @@ function RegisterComponent() {
     };
 
     return (
-        <div className="login-container">
-            <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
+        <div className="register-container">
+            <h1>Register</h1>
+            <form onSubmit={handleSubmit} className="register-form">
                 <div className="form-group">
                     <label htmlFor="username">Username:</label>
                     <input
